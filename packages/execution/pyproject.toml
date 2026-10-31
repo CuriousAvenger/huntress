@@ -1,0 +1,29 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "huntress-execution"
+version = "0.1.0"
+description = "Execution service, fixed profile registry, Exegol MCP adapter, fake backend."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary" }
+dependencies = [
+  "huntress-contracts",
+  "huntress-governance",
+  "huntress-evidence",
+  "huntress-scanning-fleet",
+  "mcp>=1.23,<3",
+  "httpx>=0.28,<1",
+  "httpx2>=2.0,<3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/huntress_execution"]
+
+[tool.uv.sources]
+huntress-contracts = { workspace = true }
+huntress-governance = { workspace = true }
+huntress-evidence = { workspace = true }
+huntress-scanning-fleet = { workspace = true }

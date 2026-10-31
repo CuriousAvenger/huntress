@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "huntress-knowledge"
+version = "0.1.0"
+description = "Versioned knowledge corpus with metadata + lexical hybrid retrieval."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary" }
+dependencies = [
+  "huntress-contracts",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/huntress_knowledge"]
+
+[tool.uv.sources]
+huntress-contracts = { workspace = true }

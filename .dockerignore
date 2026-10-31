@@ -1,0 +1,20 @@
+# Keep secrets, local evidence, virtualenvs, and caches out of build contexts.
+.git
+.gitignore
+.venv
+.huntress
+.env
+.env.*
+!.env.example
+.mypy_cache
+.pytest_cache
+.ruff_cache
+.import_linter_cache
+htmlcov
+.coverage
+__pycache__
+**/__pycache__
+*.pyc
+*.pyo
+dist
+build

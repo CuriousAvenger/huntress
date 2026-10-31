@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "huntress-verification"
+version = "0.1.0"
+description = "Deterministic validation gates, proof oracles, severity, and deduplication."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary" }
+dependencies = [
+  "huntress-contracts",
+  "huntress-evidence",
+  "huntress-governance",
+  "packaging>=24,<27",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/huntress_verification"]
+
+[tool.uv.sources]
+huntress-contracts = { workspace = true }
+huntress-evidence = { workspace = true }
+huntress-governance = { workspace = true }

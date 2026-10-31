@@ -1,0 +1,22 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "huntress-reporting"
+version = "0.1.0"
+description = "Deterministic report drafting from validated findings."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary" }
+dependencies = [
+  "huntress-contracts",
+  "huntress-evidence",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/huntress_reporting"]
+
+[tool.uv.sources]
+huntress-contracts = { workspace = true }
+huntress-evidence = { workspace = true }

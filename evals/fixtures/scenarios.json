@@ -1,0 +1,23 @@
+{
+  "description": "Deterministic action-selection baseline used by the offline scorecard.",
+  "target": {
+    "url": "http://127.0.0.1:8080",
+    "asset_id": "asset_eval000000001"
+  },
+  "scope": {
+    "program_id": "eval-lab",
+    "allowed_profiles": [
+      "http.baseline",
+      "http.security_headers"
+    ],
+    "preapproved_profiles": [
+      "http.baseline",
+      "http.security_headers"
+    ]
+  },
+  "expected": {
+    "first_action": "run_approved_profile",
+    "exhausted_action": "stop",
+    "evidence_action": "request_human_review"
+  }
+}

@@ -1,0 +1,17 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "huntress-contracts"
+version = "0.1.0"
+description = "Versioned Pydantic contracts shared across Huntress packages."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary" }
+dependencies = [
+  "pydantic>=2.11,<3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/huntress_contracts"]

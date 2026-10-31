@@ -1,0 +1,25 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "huntress-reasoning"
+version = "0.1.0"
+description = "Strands reasoning runtime, context compiler, prompts, and decision validation."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary" }
+dependencies = [
+  "huntress-contracts",
+  "huntress-governance",
+  "huntress-knowledge",
+  "strands-agents[openai,anthropic]>=1.62,<2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/huntress_reasoning"]
+
+[tool.uv.sources]
+huntress-contracts = { workspace = true }
+huntress-governance = { workspace = true }
+huntress-knowledge = { workspace = true }

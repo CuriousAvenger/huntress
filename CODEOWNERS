@@ -1,0 +1,26 @@
+# CODEOWNERS
+#
+# Replace the placeholder teams with your organization's real teams before
+# enabling branch protection. Security-critical paths require a second review.
+
+*                               @huntress-maintainers
+
+# Authority and execution boundaries
+/packages/governance/           @huntress-maintainers @huntress-security
+/packages/execution/            @huntress-maintainers @huntress-security
+/packages/verification/         @huntress-maintainers @huntress-security
+/packages/persistence/src/huntress_persistence/db.py             @huntress-security
+/packages/persistence/src/huntress_persistence/repositories.py   @huntress-security
+/packages/orchestrator/src/huntress_orchestrator/controller.py    @huntress-maintainers @huntress-security
+/packages/orchestrator/src/huntress_orchestrator/cli.py           @huntress-maintainers @huntress-security
+
+# Contracts and policy tests
+/packages/contracts/            @huntress-maintainers @huntress-security
+/tests/policy/                  @huntress-security
+/tests/e2e_lab/                 @huntress-maintainers @huntress-security
+
+# Configuration, secrets, and deployment
+/config/                        @huntress-maintainers @huntress-security
+/docker/                        @huntress-maintainers @huntress-security
+/.env.example                   @huntress-security
+/docs/threat-model.md           @huntress-security

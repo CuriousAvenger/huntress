@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.import_linter_cache/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+dist/
+build/
+uv.lock
+
+# Huntress runtime data — never commit
+.huntress/
+*.db
+*.db-wal
+*.db-shm
+artifacts/
+logs/
+.env
+
+# Editors
+.idea/
+.vscode/
+.DS_Store

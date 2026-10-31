@@ -1,0 +1,24 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "huntress-scanning-fleet"
+version = "0.1.0"
+description = "Bounded discovery profiles, parsers, and sweep digests."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary" }
+dependencies = [
+  "huntress-contracts",
+  "huntress-evidence",
+  "httpx>=0.28,<1",
+  "dnspython>=2.7,<3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/huntress_scanning"]
+
+[tool.uv.sources]
+huntress-contracts = { workspace = true }
+huntress-evidence = { workspace = true }

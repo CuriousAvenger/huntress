@@ -1,0 +1,62 @@
+services:
+  # Loopback-only vulnerable target for local development and demos.
+  lab:
+    image: ghcr.io/astral-sh/uv:python3.12-bookworm-slim
+    working_dir: /workspace
+    command:
+      - sh
+      - -lc
+      - uv sync --all-packages --frozen --no-dev && /tmp/huntress-venv/bin/huntress lab serve --host 0.0.0.0 --port 8000
+    user: "10001:10001"
+    environment:
+      HOME: /tmp
+      # Do not reuse the host's .venv through the bind mount.
+      UV_PROJECT_ENVIRONMENT: /tmp/huntress-venv
+      UV_CACHE_DIR: /tmp/uv-cache
+    volumes:
+      - ../pyproject.toml:/workspace/pyproject.toml:ro
+      - ../uv.lock:/workspace/uv.lock:ro
+      - ../packages:/workspace/packages:ro
+      - ../config:/workspace/config:ro
+    ports:
+      - "127.0.0.1:18080:8000"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      # The virtualenv lives here, so the mount must allow execution.
+      - /tmp:exec
+
+  # Deterministic validation image. No model SDKs or credentials.
+  verification:
+    build:
+      context: ..
+      dockerfile: docker/verification/Dockerfile
+    profiles: ["verification"]
+    command: ["-c", "import huntress_verification; print('verification ready')"]
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    read_only: true
+    tmpfs:
+      - /tmp
+
+  # Reference execution sandbox for reviewed profiles. It has no Docker
+  # socket, no credentials, and no network by default. This is not the Exegol
+  # container; see docker/README.md before adding tools or a network.
+  execution-sandbox:
+    build:
+      context: ./exegol-execution
+    profiles: ["sandbox"]
+    command: ["curl --version"]
+    network_mode: none
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true

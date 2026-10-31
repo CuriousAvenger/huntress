@@ -1,0 +1,160 @@
+[project]
+name = "huntress-workspace"
+version = "0.1.0"
+description = "Autonomous, policy-enforced bug-bounty engine"
+requires-python = ">=3.12,<3.14"
+dependencies = []
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[dependency-groups]
+dev = [
+  "pytest>=8.3,<9",
+  "pytest-cov>=6,<8",
+  "pytest-timeout>=2.3,<3",
+  "pytest-asyncio>=0.25,<2",
+  "ruff>=0.9,<1",
+  "mypy>=1.14,<2",
+  "import-linter>=2.2,<3",
+  "types-requests>=2.32",
+]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests", "evals"]
+pythonpath = ["."]
+addopts = "-ra --strict-markers --strict-config"
+timeout = 120
+filterwarnings = [
+  "error",
+  "ignore::DeprecationWarning:strands.*",
+  "ignore::DeprecationWarning:mcp.*",
+]
+markers = [
+  "lab: isolated local-lab end-to-end tests",
+  "integration: replay / fake-backend integration tests",
+  "eval: agent evaluation scorecard",
+]
+
+[tool.coverage.run]
+source = ["packages"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+  "pragma: no cover",
+  "if TYPE_CHECKING:",
+  "raise NotImplementedError",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+src = ["packages", "tests", "evals"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "TID", "RUF", "S", "C4", "DTZ", "PTH"]
+ignore = [
+  "S101",   # asserts are used in tests
+  "S105",   # false positives on enum/field names
+  "S106",   # test fixtures use dummy passwords
+  "B008",   # Typer uses function calls as defaults
+  "RUF012", # mutable class attrs are fine on Pydantic models
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S", "DTZ", "PTH"]
+"evals/**" = ["S", "DTZ", "PTH"]
+"scripts/**" = ["S", "DTZ", "PTH"]
+# Table and column names are internal constants; every user value is bound.
+"packages/persistence/src/huntress_persistence/repositories.py" = ["S608"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_any_generics = true
+no_implicit_optional = true
+plugins = ["pydantic.mypy"]
+mypy_path = "packages/contracts/src:packages/governance/src:packages/persistence/src:packages/evidence/src:packages/scanning_fleet/src:packages/execution/src:packages/verification/src:packages/knowledge/src:packages/reasoning/src:packages/reporting/src:packages/orchestrator/src"
+exclude = ["tests/", "evals/"]
+
+[tool.importlinter]
+root_packages = [
+  "huntress_contracts",
+  "huntress_governance",
+  "huntress_persistence",
+  "huntress_evidence",
+  "huntress_scanning",
+  "huntress_execution",
+  "huntress_verification",
+  "huntress_knowledge",
+  "huntress_reasoning",
+  "huntress_reporting",
+  "huntress_orchestrator",
+]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "Contracts are dependency-free"
+type = "forbidden"
+source_modules = ["huntress_contracts"]
+forbidden_modules = [
+  "huntress_governance", "huntress_persistence", "huntress_evidence",
+  "huntress_scanning", "huntress_execution", "huntress_verification",
+  "huntress_knowledge", "huntress_reasoning", "huntress_reporting",
+  "huntress_orchestrator", "strands", "openai", "anthropic", "mcp",
+]
+
+[[tool.importlinter.contracts]]
+name = "Scanning and verification never import model SDKs"
+type = "forbidden"
+source_modules = ["huntress_scanning", "huntress_verification"]
+forbidden_modules = ["strands", "openai", "anthropic", "huntress_reasoning"]
+
+[[tool.importlinter.contracts]]
+name = "Execution does not depend on reasoning"
+type = "forbidden"
+source_modules = ["huntress_execution"]
+forbidden_modules = ["huntress_reasoning", "strands", "openai", "anthropic"]
+
+[[tool.importlinter.contracts]]
+name = "Reasoning cannot execute or validate"
+type = "forbidden"
+source_modules = ["huntress_reasoning"]
+forbidden_modules = [
+  "huntress_execution", "huntress_scanning", "huntress_verification",
+  "huntress_persistence", "huntress_orchestrator",
+]
+
+[[tool.importlinter.contracts]]
+name = "Governance does not depend on execution or reasoning"
+type = "forbidden"
+source_modules = ["huntress_governance"]
+forbidden_modules = [
+  "huntress_execution", "huntress_reasoning", "huntress_scanning",
+  "huntress_verification", "huntress_orchestrator",
+]
+
+[[tool.importlinter.contracts]]
+name = "Evidence store does not depend on policy or reasoning"
+type = "forbidden"
+source_modules = ["huntress_evidence"]
+forbidden_modules = [
+  "huntress_governance", "huntress_execution", "huntress_reasoning",
+  "huntress_verification", "huntress_orchestrator",
+]
+
+[[tool.importlinter.contracts]]
+name = "Knowledge does not depend on reasoning"
+type = "forbidden"
+source_modules = ["huntress_knowledge"]
+forbidden_modules = ["huntress_reasoning", "strands", "openai", "anthropic"]
+
+[[tool.importlinter.contracts]]
+name = "Reporting does not depend on the model runtime"
+type = "forbidden"
+source_modules = ["huntress_reporting"]
+forbidden_modules = ["huntress_reasoning", "strands", "openai", "anthropic"]

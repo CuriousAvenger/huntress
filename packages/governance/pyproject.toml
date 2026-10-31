@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "huntress-governance"
+version = "0.1.0"
+description = "Scope compiler/guard, approvals, budgets, and deterministic policy gateway."
+readme = "README.md"
+requires-python = ">=3.12,<3.14"
+license = { text = "Proprietary" }
+dependencies = [
+  "huntress-contracts",
+  "pydantic>=2.11,<3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/huntress_governance"]
+
+[tool.uv.sources]
+huntress-contracts = { workspace = true }
